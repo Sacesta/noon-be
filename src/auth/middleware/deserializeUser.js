@@ -23,10 +23,11 @@ module.exports.deserializeUser = async (req, res, next) => {
       return next(new AppError(`Invalid token or user doesn't exist`, 401));
     }
 
-    res.locals.user = user;
+    res.locals.user = decoded;
 
     next();
   } catch (err) {
+    console.log(err);
     next(err);
   }
 };
