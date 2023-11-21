@@ -1,2 +1,2 @@
 // excludedFields.js
-module.exports.excludedFields = ["password"];
+module.exports.excludedFields = ["password", "role"];

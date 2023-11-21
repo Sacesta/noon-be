@@ -12,7 +12,7 @@ const { validate } = require("../auth/middleware/validate");
 const AppError = require("../utils/appError");
 
 // Multer config
-const upload = multer(storage.fileConfig);
+const upload = multer(storage.imageConfig);
 
 router.use(deserializeUser, requireUser);
 

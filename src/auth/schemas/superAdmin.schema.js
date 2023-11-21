@@ -11,7 +11,12 @@ module.exports.superAdminRegistrationSchema = object({
   }),
 });
 
-module.exports.superAdminLoginSchema = object({
+
+
+
+m
+
+module.exports.LoginSchema = object({
   body: object({
     email: string({ required_error: "Email is required" }).email({
       message: "Invalid email",

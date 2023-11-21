@@ -1,13 +1,20 @@
+const { uploadImageToAWS } = require("../../aws/services");
 const AppError = require("../../utils/appError");
 const { excludedFields } = require("../../utils/excludedFields");
 const { sendResponse } = require("../../utils/sendResponse");
-const { registerAdmin, findAdmin, signToken } = require("../services");
+const {
+  registerAdmin,
+  signToken,
+  registerVendor,
+  registerCustomer,
+  findUser,
+} = require("../services");
 const _ = require("lodash");
 
 const AdminRegisterationController = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-    const admin = await registerAdmin({ email, password });
+    const admin = await registerAdmin({ email, password, role: "superAdmin" });
     await admin.save();
     const omittedResponse = _.omit(admin.toObject(), excludedFields);
     sendResponse(res, omittedResponse, "Registered successfully");
@@ -22,14 +29,82 @@ const AdminRegisterationController = async (req, res, next) => {
   }
 };
 
-const AdminLoginController = async (req, res, next) => {
+const VendorRegistrationController = async (req, res, next) => {
+  try {
+    const {
+      email,
+      password,
+      category,
+      paymentDetails,
+      address,
+      storeName,
+      phone,
+    } = req.body;
+
+    const { storeLogo, documentation } = req.files;
+
+    const storeLogoUrl = await uploadImageToAWS(storeLogo[0]);
+    const documentationUrl = await uploadImageToAWS(documentation[0]);
+
+    const payload = {
+      email,
+      password,
+      category,
+      paymentDetails,
+      address,
+      storeName,
+      phone,
+      storeLogo: storeLogoUrl,
+      documentation: documentationUrl,
+      role: "vendor",
+    };
+    const vendor = await registerVendor(payload);
+    await vendor.save();
+    const omittedResponse = _.omit(vendor.toObject(), excludedFields);
+    sendResponse(res, omittedResponse, "Registered successfully");
+  } catch (err) {
+    if (err.code === 11000) {
+      return res.status(409).json({
+        status: "fail",
+        message: "Email already exist",
+      });
+    }
+    next(err);
+  }
+};
+
+const CustomerRegistrationController = async (req, res, next) => {
+  try {
+    const { email, password, name, phone } = req.body;
+    const payload = {
+      email,
+      password,
+      phone,
+      name,
+      role: "customer",
+    };
+    const vendor = await registerCustomer(payload);
+    await vendor.save();
+    const omittedResponse = _.omit(vendor.toObject(), excludedFields);
+    sendResponse(res, omittedResponse, "Registered successfully");
+  } catch (err) {
+    if (err.code === 11000) {
+      return res.status(409).json({
+        status: "fail",
+        message: "Email already exist",
+      });
+    }
+    next(err);
+  }
+};
+
+const LoginController = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-    const admin = await findAdmin({ email });
-    if (!admin || !(await admin.comparePasswords(admin.password, password)))
+    const user = await findUser({ email });
+    if (!user || !(await user.comparePasswords(user.password, password)))
       return next(new AppError("Invalid Email or password", 401));
-
-    const { access_token } = await signToken(admin);
+    const { access_token } = await signToken(user);
 
     sendResponse(res, {
       status: "success",
@@ -41,4 +116,9 @@ const AdminLoginController = async (req, res, next) => {
   }
 };
 
-module.exports = { AdminLoginController, AdminRegisterationController };
+module.exports = {
+  LoginController,
+  AdminRegisterationController,
+  CustomerRegistrationController,
+  VendorRegistrationController,
+};

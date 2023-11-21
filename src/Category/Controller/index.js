@@ -1,4 +1,6 @@
 const { uploadImageToAWS } = require("../../aws/services");
+const AppError = require("../../utils/appError");
+const { sendResponse } = require("../../utils/sendResponse");
 const { createCategory } = require("../Services");
 
 const CreateCategoryController = async (req, res, next) => {
@@ -13,8 +15,11 @@ const CreateCategoryController = async (req, res, next) => {
       parentCategory,
       icon: iconUrl,
     });
+    await category.save();
+    sendResponse(res, category.toObject(), "Registered successfully");
   } catch (error) {
     console.log(error);
+    throw new AppError(error.message);
   }
 };
 
