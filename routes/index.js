@@ -2,11 +2,15 @@ const status = require("../src/health/routes");
 // const classRoute = require("../src/class/routes");
 const authRoute = require("../src/auth/routes");
 const categoryRoute = require("../src/Category/routes");
+const brandRoute = require("../src/brand/routes");
+const attributeRoute = require("../src/Attributes/routes");
 
 module.exports = (app) => {
   app.use("/status", status);
   app.use("/api/auth", authRoute);
   app.use("/api/category", categoryRoute);
+  app.use("/api/brand", brandRoute);
+  app.use("/api/attribute", attributeRoute);
 
   // unknown routes
   app.all("*", (req, res, next) => {
