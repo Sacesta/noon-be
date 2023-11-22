@@ -1,4 +1,4 @@
-const { object, string } = require("zod");
+const { object, string, number } = require("zod");
 
 const productSchema = object({
   body: object({

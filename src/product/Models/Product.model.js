@@ -44,7 +44,7 @@ const productSchema = new mongoose.Schema({
     type: String,
   },
   discount: {
-    discountPrice: string,
+    discountPrice: String,
     discountDateRange: discountRangeSchema,
   },
   quantity: {

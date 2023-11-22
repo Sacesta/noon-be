@@ -5,8 +5,8 @@ const attributeSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  value: {
-    type: String,
+  values: {
+    type: [String],
     required: true,
   },
 });

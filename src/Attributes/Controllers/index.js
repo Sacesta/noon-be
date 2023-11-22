@@ -4,8 +4,8 @@ const { createAttribute } = require("../services");
 
 const createAttributeController = async (req, res, next) => {
   try {
-    const { name, value } = req.body;
-    const attribute = await createAttribute({ name, value });
+    const { name, values } = req.body;
+    const attribute = await createAttribute({ name, values });
     attribute.save();
     sendResponse(res, attribute.toObject, "Attribute created successfully");
   } catch (error) {

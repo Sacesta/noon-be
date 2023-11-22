@@ -1,8 +1,12 @@
-const { object, string } = require("zod");
+const { object, string, array } = require("zod");
 
 module.exports.AttributeSchema = object({
   body: object({
     name: string({ required_error: "Attribute Name is required" }),
-    value: string({ required_error: "Attribute Value is required" }),
+    values: array(
+      string({
+        required_error: "At least one value is required",
+      })
+    ),
   }),
 });
