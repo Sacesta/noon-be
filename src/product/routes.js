@@ -39,4 +39,31 @@ router.post(
   createProductController
 );
 
+router.post(
+  "/updateProduct/:id",
+  upload.fields([
+    {
+      name: "thumbnail",
+      maxCount: 1,
+    },
+    {
+      name: "galleryImages",
+    },
+  ]),
+  (req, res, next) => {
+    if (!req.files) {
+      req.files = {};
+    }
+    if (!req.files["thumbnail"]) {
+      req.files["thumbnail"] = undefined;
+    }
+    if (!req.files["galleryImages"]) {
+      req.files["galleryImages"] = undefined;
+    }
+    next();
+  },
+  // validate(productSchema),
+  createProductController
+);
+
 module.exports = router;

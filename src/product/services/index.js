@@ -4,4 +4,8 @@ const createProduct = async (productPayload) => {
   return Product.create(productPayload);
 };
 
-module.exports = { createProduct };
+const getGalleryImages = async (productId) => {
+  return;
+};
+
+module.exports = { createProduct, getGalleryImages };

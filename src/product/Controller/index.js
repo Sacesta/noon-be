@@ -1,9 +1,9 @@
-const { uploadImageToAWS } = require("../../aws/services");
+const { uploadImageToAWS, deleteImageFromAWS } = require("../../aws/services");
 const AppError = require("../../utils/appError");
 const { excludedFields } = require("../../utils/excludedFields");
 const { removeNullOrUndefinedFields } = require("../../utils/misc");
 const { sendResponse } = require("../../utils/sendResponse");
-const { createProduct } = require("../services");
+const { createProduct, getGalleryImages } = require("../services");
 const _ = require("lodash");
 
 const createProductController = async (req, res, next) => {
@@ -164,4 +164,95 @@ const createProductController = async (req, res, next) => {
   }
 };
 
-module.exports = { createProductController };
+const updateProductController = async (req, res, next) => {
+  try {
+    const prodcutId = req.params.id;
+    let galleryImagesUrls = undefined;
+    let thumbnailUrl = undefined;
+    const {
+      name,
+      shortDescriptions,
+      description,
+      type,
+      unit,
+      weight,
+      quantity,
+      price,
+      salePrice,
+      saleStartDate,
+      saleEndDate,
+      discountPrice,
+      discountStartDate,
+      discountEndDate,
+      isFeatured,
+      shippingDays,
+      isCod,
+      isFreeShipping,
+      isSaleEnable,
+      isReturn,
+      isTrending,
+      isApproved,
+      sku,
+      isRandomRelatedProducts,
+      stockStatus,
+      metaTitle,
+      metaDescription,
+      estimatedDeliveryText,
+      returnPolicyText,
+      safeCheckout,
+      secureCheckout,
+      socialShare,
+      encourageOrder,
+      encourageView,
+      slug,
+      status,
+      store,
+      createdBy,
+      taxId,
+      ordersCount,
+      reviewsCount,
+      canReview,
+      ratingCount,
+      orderAmount,
+      reviewRatings,
+      relatedProducts,
+      crossSellProducts,
+      sizeChartImage,
+      categories,
+      attributes,
+      brand,
+      videoProvider,
+      videoLink,
+      shippingRate,
+    } = req.body;
+    const { galleryImages, thumbnail } = req.files;
+
+    if (galleryImages) {
+      galleryImagesUrls = [];
+      const previousGalleryImages = await getGalleryImages(prodcutId);
+
+      for (let image of previousGalleryImages) {
+        await deleteImageFromAWS(image.url);
+      }
+      for (let image of galleryImages) {
+        const url = await uploadImageToAWS(image);
+        const urlObj = {
+          url,
+        };
+        galleryImagesUrls.push(urlObj);
+      }
+    }
+
+    if (thumbnail) {
+      const previousThumbnail = await getThumbnailByProductId(productId);
+      if (previousThumbnail) {
+        await deleteImageFromAWS(previousThumbnail.url);
+      }
+      thumbnailUrl = await uploadImageToAWS(thumbnail[0]);
+    }
+  } catch (error) {
+    next(new AppError(error.message));
+  }
+};
+
+module.exports = { createProductController, updateProductController };

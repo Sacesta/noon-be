@@ -5,6 +5,8 @@ const categoryRoute = require("../src/Category/routes");
 const brandRoute = require("../src/brand/routes");
 const attributeRoute = require("../src/Attributes/routes");
 const productRoute = require("../src/product/routes");
+const rolesRoute = require("../src/Roles/routes");
+const userRoute = require("../src/user/routes");
 
 module.exports = (app) => {
   app.use("/status", status);
@@ -13,6 +15,8 @@ module.exports = (app) => {
   app.use("/api/brand", brandRoute);
   app.use("/api/attribute", attributeRoute);
   app.use("/api/product", productRoute);
+  app.use("/api/roles", rolesRoute);
+  app.use("/api/users", userRoute);
 
   // unknown routes
   app.all("*", (req, res, next) => {
