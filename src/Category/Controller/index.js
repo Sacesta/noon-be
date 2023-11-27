@@ -8,6 +8,8 @@ const CreateCategoryController = async (req, res, next) => {
     const { name, parentCategory } = req.body;
     const iconImage = req.file;
 
+    console.log(parentCategory);
+
     const iconUrl = await uploadImageToAWS(iconImage);
 
     const category = await createCategory({
@@ -16,7 +18,7 @@ const CreateCategoryController = async (req, res, next) => {
       icon: iconUrl,
     });
     await category.save();
-    sendResponse(res, category.toObject(), "Registered successfully");
+    sendResponse(res, category.toObject(), "Category created successfully");
   } catch (error) {
     console.log(error);
     throw new AppError(error.message);

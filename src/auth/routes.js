@@ -5,6 +5,7 @@ const {
   LoginController,
   CustomerRegistrationController,
   VendorRegistrationController,
+  GetAllUsersController,
 } = require("./controller/index");
 const storage = require("../utils/FileStorage.config");
 const { deserializeUser } = require("./middleware/deserializeUser");
@@ -16,6 +17,7 @@ const {
   vendorSchema,
 } = require("./schemas/user.schema");
 const { validate } = require("./middleware/validate");
+const { checkAdmin } = require("./middleware/ValidateRoles");
 
 // Multer config
 const upload = multer(storage.mixConfig);
@@ -63,6 +65,10 @@ router.post("/login", validate(LoginSchema), LoginController);
 
 // This is deserialze middleware it checks for user have valid session and have appropriate tokens.
 router.use(deserializeUser, requireUser);
+
+router.use(checkAdmin);
+
+router.use("/users", GetAllUsersController);
 
 // Protected routes
 

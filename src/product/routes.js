@@ -1,7 +1,10 @@
 const express = require("express");
 const multer = require("multer");
 const storage = require("../utils/FileStorage.config");
-const { createProductController } = require("./Controller");
+const {
+  createProductController,
+  GetAllCurrentVendorProductsController,
+} = require("./Controller");
 const { deserializeUser } = require("../auth/middleware/deserializeUser");
 const { requireUser } = require("../auth/middleware/requireUser");
 const { checkVendor } = require("../auth/middleware/ValidateRoles");
@@ -65,5 +68,7 @@ router.post(
   // validate(productSchema),
   createProductController
 );
+
+router.get("/vendorProducts", GetAllCurrentVendorProductsController);
 
 module.exports = router;

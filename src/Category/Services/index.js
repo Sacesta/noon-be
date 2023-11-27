@@ -3,7 +3,7 @@ const { Category } = require("../Models/Category.model");
 const createCategory = async (categoryPayload) => {
   try {
     if (
-      categoryPayload.parentCategory ||
+      !categoryPayload.parentCategory ||
       categoryPayload.parentCategory === "null"
     ) {
       const { parentCategory, ...removedParentCategory } = categoryPayload;

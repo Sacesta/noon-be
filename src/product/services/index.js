@@ -8,4 +8,9 @@ const getGalleryImages = async (productId) => {
   return;
 };
 
-module.exports = { createProduct, getGalleryImages };
+const getVendorProducts = async (userId) => {
+  const products = Product.find({ createdBy: userId });
+  return products;
+};
+
+module.exports = { createProduct, getGalleryImages, getVendorProducts };

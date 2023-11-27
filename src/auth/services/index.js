@@ -33,10 +33,16 @@ const signToken = async (user) => {
   return { access_token };
 };
 
+const getUsers = async () => {
+  const users = await User.find().select("-password");
+  return users;
+};
+
 module.exports = {
   registerAdmin,
   registerCustomer,
   registerVendor,
   findUser,
   signToken,
+  getUsers,
 };

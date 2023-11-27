@@ -8,8 +8,18 @@ const {
   registerVendor,
   registerCustomer,
   findUser,
+  getUsers,
 } = require("../services");
 const _ = require("lodash");
+
+const GetAllUsersController = async (req, res, next) => {
+  try {
+    const users = await getUsers();
+    sendResponse(res, users, "All users fetched successfully");
+  } catch (error) {
+    next(error);
+  }
+};
 
 const AdminRegisterationController = async (req, res, next) => {
   try {
@@ -121,4 +131,5 @@ module.exports = {
   AdminRegisterationController,
   CustomerRegistrationController,
   VendorRegistrationController,
+  GetAllUsersController,
 };

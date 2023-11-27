@@ -3,11 +3,16 @@ const AppError = require("../../utils/appError");
 const { excludedFields } = require("../../utils/excludedFields");
 const { removeNullOrUndefinedFields } = require("../../utils/misc");
 const { sendResponse } = require("../../utils/sendResponse");
-const { createProduct, getGalleryImages } = require("../services");
+const {
+  createProduct,
+  getGalleryImages,
+  getVendorProducts,
+} = require("../services");
 const _ = require("lodash");
 
 const createProductController = async (req, res, next) => {
   try {
+    const currentVendor = res.locals.user.sub;
     const {
       name,
       shortDescriptions,
@@ -46,7 +51,6 @@ const createProductController = async (req, res, next) => {
       slug,
       status,
       store,
-      createdBy,
       taxId,
       ordersCount,
       reviewsCount,
@@ -127,7 +131,7 @@ const createProductController = async (req, res, next) => {
       slug: slug,
       status: status,
       store: store,
-      createdBy: createdBy,
+      createdBy: currentVendor,
       taxId: taxId,
       ordersCount: ordersCount,
       reviewsCount: reviewsCount,
@@ -255,4 +259,19 @@ const updateProductController = async (req, res, next) => {
   }
 };
 
-module.exports = { createProductController, updateProductController };
+const GetAllCurrentVendorProductsController = async (req, res, next) => {
+  try {
+    const userId = res.locals.user.sub;
+    const products = await getVendorProducts(userId);
+
+    sendResponse(res, products, "Product created successfully!");
+  } catch (error) {
+    next(new AppError(error.message));
+  }
+};
+
+module.exports = {
+  createProductController,
+  updateProductController,
+  GetAllCurrentVendorProductsController,
+};

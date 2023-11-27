@@ -161,13 +161,47 @@ const permissionSchema = new mongoose.Schema(
 
 const Permission = mongoose.model("Permission", permissionSchema);
 
-const permissionList = Object.keys(PermissionEnum).map((key) => {
-  return {
-    id: PermissionEnum[key],
-    name: key,
-  };
-});
+// const permissionList = Object.keys(PermissionEnum).map((key) => {
+//   return {
+//     id: PermissionEnum[key],
+//     name: key,
+//   };
+// });
 
-Permission.insertMany(permissionList);
+// const existingPermissions = Permission.find(
+//   {
+//     id: { $in: permissionList.map((p) => p.id) },
+//   },
+//   { id: 1 }
+// ).lean();
+
+// const newPermissions = permissionList.filter((p) => {
+//   return !existingPermissions.some((ep) => ep.id === p.id);
+// });
+
+async function seedPermissions() {
+  const permissionList = Object.keys(PermissionEnum).map((key) => {
+    return {
+      id: PermissionEnum[key],
+      name: key,
+    };
+  });
+
+  // Execute query
+  const existing = await Permission.find(
+    {
+      id: { $in: permissionList.map((p) => p.id) },
+    },
+    { id: 1 }
+  ).lean();
+
+  const newPermissions = permissionList.filter((p) => {
+    return !existing.some((ep) => ep.id === p.id);
+  });
+
+  await Permission.insertMany(newPermissions);
+}
+
+seedPermissions();
 
 module.exports = { Permission };
