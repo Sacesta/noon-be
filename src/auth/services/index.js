@@ -34,7 +34,7 @@ const signToken = async (user) => {
 };
 
 const getUsers = async () => {
-  const users = await User.find().select("-password");
+  const users = await User.find({ role: "customer" }).select("-password");
   return users;
 };
 

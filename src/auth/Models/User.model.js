@@ -47,6 +47,10 @@ const customerSchema = new Schema({
     trim: true,
   },
   phone: String,
+  status: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 // Middleware to hash the password before saving

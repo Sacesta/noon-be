@@ -1,6 +1,7 @@
 const { uploadImageToAWS } = require("../../aws/services");
 const AppError = require("../../utils/appError");
 const { excludedFields } = require("../../utils/excludedFields");
+const { removeNullOrUndefinedFields } = require("../../utils/misc");
 const { sendResponse } = require("../../utils/sendResponse");
 const {
   registerAdmin,
@@ -85,15 +86,17 @@ const VendorRegistrationController = async (req, res, next) => {
 
 const CustomerRegistrationController = async (req, res, next) => {
   try {
-    const { email, password, name, phone } = req.body;
+    const { email, password, name, phone, status } = req.body;
     const payload = {
       email,
       password,
       phone,
       name,
       role: "customer",
+      status,
     };
-    const vendor = await registerCustomer(payload);
+    const cleanPayload = removeNullOrUndefinedFields(payload);
+    const vendor = await registerCustomer(cleanPayload);
     await vendor.save();
     const omittedResponse = _.omit(vendor.toObject(), excludedFields);
     sendResponse(res, omittedResponse, "Registered successfully");

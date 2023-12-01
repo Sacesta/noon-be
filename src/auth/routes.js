@@ -40,26 +40,26 @@ router.post(
   CustomerRegistrationController
 );
 
-// Vendor
-router.post(
-  "/registerVendor",
-  upload.fields([
-    { name: "storeLogo", maxCount: 1 },
-    { name: "documentation", maxCount: 1 },
-  ]),
-  (req, res, next) => {
-    // Here check in req.files that storeLogo[0] and documentation[0] is not defined ,if not present then set them with an empty string for now and call next() middleware
-    if (req.files) {
-      if (!req?.files?.["storeLogo"]?.[0]) req.files["storeLogo"] = [""];
-      if (!req?.files?.["documentation"]?.[0])
-        req.files["documentation"] = [""];
-    }
+// // Vendor
+// router.post(
+//   "/registerVendor",
+//   upload.fields([
+//     { name: "storeLogo", maxCount: 1 },
+//     { name: "documentation", maxCount: 1 },
+//   ]),
+//   (req, res, next) => {
+//     // Here check in req.files that storeLogo[0] and documentation[0] is not defined ,if not present then set them with an empty string for now and call next() middleware
+//     if (req.files) {
+//       if (!req?.files?.["storeLogo"]?.[0]) req.files["storeLogo"] = [""];
+//       if (!req?.files?.["documentation"]?.[0])
+//         req.files["documentation"] = [""];
+//     }
 
-    next();
-  },
-  validate(vendorSchema),
-  VendorRegistrationController
-);
+//     next();
+//   },
+//   validate(vendorSchema),
+//   VendorRegistrationController
+// );
 
 router.post("/login", validate(LoginSchema), LoginController);
 

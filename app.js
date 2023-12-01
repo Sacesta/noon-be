@@ -17,11 +17,15 @@ app.use(expressip().getIpInfoMiddleware);
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use(
-  cors({
-    origin: allowedOrigins,
-  })
-);
+// In production only specified origins will be accepted.
+// app.use(
+//   cors({
+//     origin: allowedOrigins,
+//   })
+// );
+
+// Testing
+app.use(cors());
 
 require("./routes/index")(app);
 
