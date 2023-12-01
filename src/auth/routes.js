@@ -68,7 +68,7 @@ router.use(deserializeUser, requireUser);
 
 router.use(checkAdmin);
 
-router.use("/users", GetAllUsersController);
+router.get("/users", GetAllUsersController);
 
 // Protected routes
 
