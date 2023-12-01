@@ -2,8 +2,21 @@ const { uploadImageToAWS } = require("../../aws/services");
 const AppError = require("../../utils/appError");
 const { excludedFields } = require("../../utils/excludedFields");
 const { sendResponse } = require("../../utils/sendResponse");
-const { registerStore } = require("../service");
+const { registerStore, getAllStores } = require("../service");
 const _ = require("lodash");
+
+const getAllStoresController = async (req, res, next) => {
+  try {
+    const stores = await getAllStores();
+    sendResponse(
+      res,
+      _.omit(stores, excludedFields),
+      "All stores fetched successfully"
+    );
+  } catch (error) {
+    next(err);
+  }
+};
 
 const createStoreController = async (req, res, next) => {
   try {
@@ -79,5 +92,6 @@ const createStoreController = async (req, res, next) => {
 };
 
 module.exports = {
+  getAllStoresController,
   createStoreController,
 };

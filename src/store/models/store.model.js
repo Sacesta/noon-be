@@ -18,26 +18,31 @@ const addressSchema = new Schema({
 });
 
 // Vendor Schema
-const storeSchema = new Schema({
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-    trim: true,
+const storeSchema = new Schema(
+  {
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+    name: String,
+    phone: String,
+    storeLogo: String,
+    storeName: String,
+    storeDescrption: String,
+    addressDetails: addressSchema,
+    documentation: String,
+    paymentDetails: paymentSchema,
   },
-  password: {
-    type: String,
-    required: true,
-  },
-  name: String,
-  phone: String,
-  storeLogo: String,
-  storeName: String,
-  storeDescrption: String,
-  addressDetails: addressSchema,
-  documentation: String,
-  paymentDetails: paymentSchema,
-});
+  {
+    timestamps: true,
+  }
+);
 
 // Middleware to hash the password before saving
 storeSchema.pre("save", async function (next) {

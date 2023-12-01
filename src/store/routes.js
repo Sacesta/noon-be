@@ -1,7 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const multer = require("multer");
-const { createStoreController } = require("./controller");
+const {
+  createStoreController,
+  getAllStoresController,
+} = require("./controller");
 const { checkAdmin } = require("../auth/middleware/ValidateRoles");
 const { requireUser } = require("../auth/middleware/requireUser");
 const { deserializeUser } = require("../auth/middleware/deserializeUser");
@@ -15,6 +18,9 @@ router.use(deserializeUser, requireUser, checkAdmin);
 const upload = multer(storage.mixConfig);
 
 // Vendor
+
+router.get("/", getAllStoresController);
+
 router.post(
   "/createStore",
   upload.fields([

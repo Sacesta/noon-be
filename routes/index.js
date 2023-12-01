@@ -8,6 +8,7 @@ const productRoute = require("../src/product/routes");
 const rolesRoute = require("../src/Roles/routes");
 const userRoute = require("../src/user/routes");
 const storeRoute = require("../src/store/routes");
+const bannerRoute = require("../src/banners/routes");
 
 module.exports = (app) => {
   app.use("/status", status);
@@ -19,6 +20,7 @@ module.exports = (app) => {
   app.use("/api/roles", rolesRoute);
   app.use("/api/users", userRoute);
   app.use("/api/stores", storeRoute);
+  app.use("/api/banners", bannerRoute);
 
   // unknown routes
   app.all("*", (req, res, next) => {
