@@ -8,11 +8,7 @@ const _ = require("lodash");
 const getAllStoresController = async (req, res, next) => {
   try {
     const stores = await getAllStores();
-    sendResponse(
-      res,
-      _.omit(stores, excludedFields),
-      "All stores fetched successfully"
-    );
+    sendResponse(res, stores, "All stores fetched successfully");
   } catch (error) {
     next(err);
   }
