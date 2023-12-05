@@ -7,17 +7,12 @@ const createBannerController = async (req, res, next) => {
   try {
     const imagesUrls = [];
 
-    const { images } = req.files;
+    const image = req.file;
 
-    if (!images[0]) throw new AppError("At least one banner image is required");
-
-    for (let image of images) {
-      const url = await uploadImageToAWS(image);
-      imagesUrls.push(url);
-    }
+    const url = await uploadImageToAWS(image);
 
     const payload = {
-      images: imagesUrls,
+      image: url,
     };
 
     const banners = await createBanner(payload);

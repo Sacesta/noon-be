@@ -8,6 +8,7 @@ const {
   createBannerController,
   getAllBannersController,
 } = require("./controllers");
+const AppError = require("../utils/appError");
 const router = express.Router();
 
 const upload = multer(storage.imageConfig);
@@ -18,18 +19,9 @@ router.get("/", getAllBannersController);
 
 router.post(
   "/createBanners",
-  upload.fields([
-    {
-      name: "images",
-    },
-  ]),
+  upload.single("image"),
   (req, res, next) => {
-    if (!req.files) {
-      req.files = {};
-    }
-    if (!req.files["images"]) {
-      req.files["images"] = [""];
-    }
+    if (!req.file) throw new AppError("Banner Image is required");
     next();
   },
   // validate(productSchema),
