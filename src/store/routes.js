@@ -4,6 +4,8 @@ const multer = require("multer");
 const {
   createStoreController,
   getAllStoresController,
+  deleteStoreController,
+  updateStoreController,
 } = require("./controller");
 const { checkAdmin } = require("../auth/middleware/ValidateRoles");
 const { requireUser } = require("../auth/middleware/requireUser");
@@ -40,5 +42,27 @@ router.post(
   validate(storeSchema),
   createStoreController
 );
+
+router.put(
+  "/updateStore/:id",
+  upload.fields([
+    { name: "storeLogo", maxCount: 1 },
+    { name: "documentation", maxCount: 1 },
+  ]),
+  (req, res, next) => {
+    // Here check in req.files that storeLogo[0] and documentation[0] is not defined ,if not present then set them with an empty string for now and call next() middleware
+    if (req.files) {
+      if (!req?.files?.["storeLogo"]?.[0]) req.files["storeLogo"] = [""];
+      if (!req?.files?.["documentation"]?.[0])
+        req.files["documentation"] = [""];
+    }
+
+    next();
+  },
+  validate(storeSchema),
+  updateStoreController
+);
+
+router.delete("/deleteStore/:id", deleteStoreController);
 
 module.exports = router;

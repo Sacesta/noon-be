@@ -8,4 +8,10 @@ const removeNullOrUndefinedFields = (obj) => {
   return cleanedObj;
 };
 
-module.exports = { removeNullOrUndefinedFields };
+const getfileNameFromUrl = (url) => {
+  const parts = url.split("/");
+  const fileName = parts[parts.length - 1];
+  return fileName;
+};
+
+module.exports = { removeNullOrUndefinedFields, getfileNameFromUrl };

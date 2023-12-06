@@ -9,4 +9,16 @@ const registerStore = async (payload) => {
   return Store.create(payload);
 };
 
-module.exports = { registerStore, getAllStores };
+const updateStore = async (payload, storeId) => {
+  const updatedStore = await Store.findByIdAndUpdate(storeId, payload, {
+    new: true,
+  });
+  return updatedStore;
+};
+
+const deleteStore = async (storeId) => {
+  const deletedStore = await Store.findByIdAndDelete(storeId);
+  return deletedStore;
+};
+
+module.exports = { registerStore, getAllStores, updateStore, deleteStore };

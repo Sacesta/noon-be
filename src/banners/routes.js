@@ -7,6 +7,8 @@ const { checkAdmin } = require("../auth/middleware/ValidateRoles");
 const {
   createBannerController,
   getAllBannersController,
+  updateBannerController,
+  deleteBannerController,
 } = require("./controllers");
 const AppError = require("../utils/appError");
 const router = express.Router();
@@ -26,6 +28,20 @@ router.post(
   },
   // validate(productSchema),
   createBannerController
+);
+
+router.put(
+  "/updateBanner/:id",
+  upload.single("image"),
+  // validate(productSchema),
+  updateBannerController
+);
+
+router.delete(
+  "/updateBanner/:id",
+  upload.single("image"),
+  // validate(productSchema),
+  deleteBannerController
 );
 
 module.exports = router;
