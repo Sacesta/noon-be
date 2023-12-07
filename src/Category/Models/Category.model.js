@@ -7,7 +7,11 @@ const categorySchema = new Schema(
       type: String,
       required: true,
     },
-    icon: {
+    status: {
+      type: Boolean,
+      default: false,
+    },
+    image: {
       type: String,
       required: true,
     },

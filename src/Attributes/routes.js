@@ -7,6 +7,8 @@ const { AttributeSchema } = require("./schemas/attribute.schema");
 const {
   createAttributeController,
   GetAttributesController,
+  updateAttributeController,
+  deleteAttributeController,
 } = require("./Controllers");
 const router = express.Router();
 
@@ -18,5 +20,9 @@ router.post(
   validate(AttributeSchema),
   createAttributeController
 );
+
+router.put("/updateAttribute/:id", updateAttributeController);
+
+router.delete("/deleteAttribute/:id", deleteAttributeController);
 
 module.exports = router;

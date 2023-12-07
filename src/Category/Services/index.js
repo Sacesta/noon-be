@@ -17,4 +17,29 @@ const createCategory = async (categoryPayload) => {
   }
 };
 
-module.exports = { createCategory };
+const updateCategory = async (categoryPayload, categoryId) => {
+  const updatedCategory = await Category.findByIdAndUpdate(
+    categoryId,
+    categoryPayload,
+    { new: true }
+  );
+
+  return updatedCategory;
+};
+
+const getAllCategories = async () => {
+  const categories = await Category.find({});
+  return categories;
+};
+
+const deleteCategory = async (categoryId) => {
+  const deletedCategory = await Category.findByIdAndDelete(categoryId);
+  return deleteCategory;
+};
+
+module.exports = {
+  createCategory,
+  getAllCategories,
+  updateCategory,
+  deleteCategory,
+};

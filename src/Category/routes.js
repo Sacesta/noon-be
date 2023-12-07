@@ -2,7 +2,12 @@ const express = require("express");
 const router = express.Router();
 const multer = require("multer");
 
-const { CreateCategoryController } = require("./Controller/index");
+const {
+  CreateCategoryController,
+  updateCategoryController,
+  deleteCategoryController,
+  getAllCategoriesController,
+} = require("./Controller/index");
 
 const storage = require("../utils/FileStorage.config");
 const { deserializeUser } = require("../auth/middleware/deserializeUser");
@@ -16,9 +21,11 @@ const upload = multer(storage.imageConfig);
 
 router.use(deserializeUser, requireUser);
 
+router.get("/getAllCategories", getAllCategoriesController);
+
 router.post(
   "/createCategory",
-  upload.single("icon"),
+  upload.single("image"),
   (req, res, next) => {
     if (!req.file || !(req.file instanceof Object)) {
       return next(new AppError("No file uploaded", 400));
@@ -28,5 +35,13 @@ router.post(
   validate(categorySchema),
   CreateCategoryController
 );
+
+router.put(
+  "/updateCategory/:id",
+  upload.single("image"),
+  updateCategoryController
+);
+
+router.delete("/deleteCategory/:id", deleteCategoryController);
 
 module.exports = router;

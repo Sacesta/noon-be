@@ -8,4 +8,23 @@ const createAttribute = async (attributePayload) => {
   return Attribute.create(attributePayload);
 };
 
-module.exports = { createAttribute, getAttributes };
+const updateAttribute = async (attributePayload, attrId) => {
+  const updatedAttr = await Attribute.findByIdAndUpdate(
+    attrId,
+    attributePayload,
+    { new: true }
+  );
+  return updatedAttr;
+};
+
+const deleteAttribute = async (attrId) => {
+  const deletedAttrr = await Attribute.findByIdAndDelete(attrId);
+  return deletedAttrr;
+};
+
+module.exports = {
+  createAttribute,
+  getAttributes,
+  updateAttribute,
+  deleteAttribute,
+};

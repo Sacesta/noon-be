@@ -6,11 +6,5 @@ module.exports.categorySchema = object({
     name: string({
       required_error: "Category name is required",
     }),
-    parentCategory: nullable(
-      string({
-        invalid_type_error: "Parent category must be a string or null",
-        required_error: "Parent category must be a string or null",
-      })
-    ),
   }),
 });
