@@ -1,90 +1,26 @@
 const mongoose = require("mongoose");
 
-const discountDateRangeSchema = new mongoose.Schema({
-  discountStartDate: Date,
-  discountEndDate: Date,
-});
-
-const saleDateRangeSchema = new mongoose.Schema({
-  discountStartDate: Date,
-  discountEndDate: Date,
-});
-
-const imageSchema = new mongoose.Schema({
-  url: String,
-});
-
-const thumbnailSchema = new mongoose.Schema({
-  url: String,
-});
-
 const productSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
   },
-  shortDescriptions: {
+  shortDescription: {
     type: String,
   },
   description: {
     type: String,
   },
-  type: {
-    type: String,
-  },
-  unit: {
-    type: String,
-    required: true,
-  },
-  weight: {
-    type: Number,
-  },
-  quantity: {
-    type: Number,
-    required: true,
-    default: 0,
-  },
-  price: {
-    type: Number,
-    required: true,
-  },
-  sale: {
-    salePrice: Number,
-    saleDateRange: saleDateRangeSchema,
-  },
-  discount: {
-    discountPrice: Number,
-    discountDateRange: discountDateRangeSchema,
-  },
-  isFeatured: {
-    type: Boolean,
-    default: false,
-  },
-  shippingDays: {
-    type: String,
+  store: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Store",
     default: null,
   },
-  isCod: {
-    type: Boolean,
-    default: false,
+  attribute: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Attribute",
   },
-  isFreeShipping: {
-    type: Boolean,
-    default: false,
-  },
-  isSaleEnable: {
-    type: Boolean,
-    default: false,
-  },
-  isReturn: {
-    type: Boolean,
-    default: false,
-  },
-  isTrending: {
-    type: Boolean,
-    default: false,
-  },
-  isApproved: {
+  stockStatus: {
     type: Boolean,
     default: false,
   },
@@ -93,108 +29,31 @@ const productSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
-  isRandomRelatedProducts: {
-    type: Boolean,
-    default: false,
-  },
-  stockStatus: {
-    type: String,
-  },
-  metaTitle: {
-    type: String,
-  },
-  metaDescription: {
-    type: String,
-  },
-
-  thumbnail: thumbnailSchema,
-  estimatedDeliveryText: {
-    type: String,
-    default: null,
-  },
-  returnPolicyText: {
-    type: String,
-    default: null,
-  },
-  safeCheckout: {
-    type: Boolean,
-    default: false,
-  },
-  secureCheckout: {
-    type: Boolean,
-    default: false,
-  },
-  socialShare: {
-    type: Boolean,
-    default: false,
-  },
-  encourageOrder: {
-    type: Boolean,
-    default: false,
-  },
-  encourageView: {
-    type: Boolean,
-    default: false,
-  },
-  slug: {
-    type: String,
-    default: "",
-  },
-  status: {
-    type: Boolean,
-    default: false,
-  },
-  store: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Store",
-    default: null,
-  },
-  createdBy: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-  },
-  taxId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Tax",
-    default: null,
-  },
-  ordersCount: {
+  stockQuantity: {
     type: Number,
     default: 0,
   },
-  reviewsCount: {
+  price: {
     type: Number,
     default: 0,
   },
-  canReview: {
+  salePrice: {
+    type: Number,
+    default: 0,
+  },
+  saleStatus: {
     type: Boolean,
     default: false,
   },
-  ratingCount: {
+  discount: {
     type: Number,
     default: 0,
   },
-  orderAmount: {
-    type: Number,
-    default: 0,
+  startDate: {
+    type: Date,
   },
-  reviewRatings: [String],
-  relatedProducts: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Product",
-    },
-  ],
-  crossSellProducts: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Product",
-    },
-  ],
-  galleryImages: [imageSchema],
-  sizeChartImage: {
-    type: String,
-    default: null,
+  endDate: {
+    type: Date,
   },
   categories: [
     {
@@ -202,24 +61,11 @@ const productSchema = new mongoose.Schema({
       ref: "Category",
     },
   ],
-  attributes: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Attribute",
-    },
-  ],
-
-  brand: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Brand",
-    default: "null",
-  },
-
-  videoProvider: String,
-  videoLink: String,
-
-  shippingRate: {
-    type: String,
+  thumbnail: String,
+  images: [String],
+  freeShipping: {
+    type: Boolean,
+    default: false,
   },
 });
 

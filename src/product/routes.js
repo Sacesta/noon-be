@@ -4,17 +4,20 @@ const storage = require("../utils/FileStorage.config");
 const {
   createProductController,
   GetAllCurrentVendorProductsController,
+  getAllProductsController,
+  deleteProductController,
+  updateProductController,
 } = require("./Controller");
 const { deserializeUser } = require("../auth/middleware/deserializeUser");
 const { requireUser } = require("../auth/middleware/requireUser");
-const { checkVendor } = require("../auth/middleware/ValidateRoles");
+const { checkAdmin } = require("../auth/middleware/ValidateRoles");
 const { validate } = require("../auth/middleware/validate");
 const { productSchema } = require("./schemas/product.schema");
 const router = express.Router();
 
 const upload = multer(storage.imageConfig);
 
-router.use(deserializeUser, requireUser, checkVendor);
+router.use(deserializeUser, requireUser, checkAdmin);
 router.post(
   "/createProduct",
   upload.fields([
@@ -23,7 +26,7 @@ router.post(
       maxCount: 1,
     },
     {
-      name: "galleryImages",
+      name: "images",
     },
   ]),
   (req, res, next) => {
@@ -33,8 +36,8 @@ router.post(
     if (!req.files["thumbnail"]) {
       req.files["thumbnail"] = [""];
     }
-    if (!req.files["galleryImages"]) {
-      req.files["galleryImages"] = [""];
+    if (!req.files["images"]) {
+      req.files["images"] = [""];
     }
     next();
   },
@@ -42,7 +45,7 @@ router.post(
   createProductController
 );
 
-router.post(
+router.put(
   "/updateProduct/:id",
   upload.fields([
     {
@@ -50,7 +53,7 @@ router.post(
       maxCount: 1,
     },
     {
-      name: "galleryImages",
+      name: "images",
     },
   ]),
   (req, res, next) => {
@@ -58,17 +61,19 @@ router.post(
       req.files = {};
     }
     if (!req.files["thumbnail"]) {
-      req.files["thumbnail"] = undefined;
+      req.files["thumbnail"] = [""];
     }
-    if (!req.files["galleryImages"]) {
-      req.files["galleryImages"] = undefined;
+    if (!req.files["images"]) {
+      req.files["images"] = [""];
     }
     next();
   },
   // validate(productSchema),
-  createProductController
+  updateProductController
 );
 
-router.get("/vendorProducts", GetAllCurrentVendorProductsController);
+router.get("/getAllProducts", getAllProductsController);
+
+router.delete("/deleteProduct/:id", deleteProductController);
 
 module.exports = router;

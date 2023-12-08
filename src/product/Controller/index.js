@@ -1,12 +1,17 @@
 const { uploadImageToAWS, deleteImageFromAWS } = require("../../aws/services");
 const AppError = require("../../utils/appError");
 const { excludedFields } = require("../../utils/excludedFields");
-const { removeNullOrUndefinedFields } = require("../../utils/misc");
+const {
+  removeNullOrUndefinedFields,
+  getfileNameFromUrl,
+} = require("../../utils/misc");
 const { sendResponse } = require("../../utils/sendResponse");
+const Product = require("../Models/Product.model");
 const {
   createProduct,
-  getGalleryImages,
-  getVendorProducts,
+  deleteProduct,
+  updateProduct,
+  getAllProducts,
 } = require("../services");
 const _ = require("lodash");
 
@@ -15,140 +20,57 @@ const createProductController = async (req, res, next) => {
     const currentVendor = res.locals.user.sub;
     const {
       name,
-      shortDescriptions,
+      shortDescription,
       description,
-      type,
-      unit,
-      weight,
-      quantity,
+      store,
+      attribute,
+      stockStatus,
+      sku,
+      stockQuantity,
       price,
       salePrice,
-      saleStartDate,
-      saleEndDate,
-      discountPrice,
-      discountStartDate,
-      discountEndDate,
-      isFeatured,
-      shippingDays,
-      isCod,
-      isFreeShipping,
-      isSaleEnable,
-      isReturn,
-      isTrending,
-      isApproved,
-      sku,
-      isRandomRelatedProducts,
-      stockStatus,
-      metaTitle,
-      metaDescription,
-      estimatedDeliveryText,
-      returnPolicyText,
-      safeCheckout,
-      secureCheckout,
-      socialShare,
-      encourageOrder,
-      encourageView,
-      slug,
-      status,
-      store,
-      taxId,
-      ordersCount,
-      reviewsCount,
-      canReview,
-      ratingCount,
-      orderAmount,
-      reviewRatings,
-      relatedProducts,
-      crossSellProducts,
-      sizeChartImage,
+      saleStatus,
+      discount,
+      startDate,
+      endDate,
       categories,
-      attributes,
-      brand,
-      videoProvider,
-      videoLink,
-      shippingRate,
+      freeShipping,
     } = req.body;
-    const galleryImagesUrls = [];
+    const imageUrls = [];
 
-    const { galleryImages, thumbnail } = req.files;
+    const { images, thumbnail } = req.files;
 
-    for (let image of galleryImages) {
-      const url = await uploadImageToAWS(image);
-      const urlObj = {
-        url,
-      };
-      galleryImagesUrls.push(urlObj);
+    if (images[0]) {
+      for (let image of images) {
+        const url = await uploadImageToAWS(image);
+
+        imageUrls.push(url);
+      }
+    }
+    let thumbnailUrl = "";
+    if (thumbnail[0]) {
+      thumbnailUrl = await uploadImageToAWS(thumbnail[0]);
     }
 
-    const thumbnailUrl = await uploadImageToAWS(thumbnail[0]);
-
     const payload = {
-      name: name,
-      shortDescriptions: shortDescriptions,
-      description: description,
-      type: type,
-      unit: unit,
-      weight: weight,
-      quantity: quantity,
-      price: price,
-      sale: {
-        salePrice: salePrice,
-        saleDateRange: {
-          saleStartDate: saleStartDate,
-          saleEndDate: saleEndDate,
-        },
-      },
-      discount: {
-        discountPrice: discountPrice,
-        discountDateRange: {
-          discountStartDate: discountStartDate,
-          discountEndDate: discountEndDate,
-        },
-      },
-      isFeatured: isFeatured,
-      shippingDays: shippingDays,
-      isCod: isCod,
-      isFreeShipping: isFreeShipping,
-      isSaleEnable: isSaleEnable,
-      isReturn: isReturn,
-      isTrending: isTrending,
-      isApproved: isApproved,
-      sku: sku,
-      isRandomRelatedProducts: isRandomRelatedProducts,
-      stockStatus: stockStatus,
-      metaTitle: metaTitle,
-      metaDescription: metaDescription,
-      thumbnail: {
-        url: thumbnailUrl,
-      },
-      estimatedDeliveryText: estimatedDeliveryText,
-      returnPolicyText: returnPolicyText,
-      safeCheckout: safeCheckout,
-      secureCheckout: secureCheckout,
-      socialShare: socialShare,
-      encourageOrder: encourageOrder,
-      encourageView: encourageView,
-      slug: slug,
-      status: status,
-      store: store,
-      createdBy: currentVendor,
-      taxId: taxId,
-      ordersCount: ordersCount,
-      reviewsCount: reviewsCount,
-      canReview: canReview,
-      ratingCount: ratingCount,
-      orderAmount: orderAmount,
-      reviewRatings: reviewRatings,
-      relatedProducts: relatedProducts,
-      crossSellProducts: crossSellProducts,
-      sizeChartImage: sizeChartImage,
-      categories: categories,
-      attributes: attributes,
-      brand: brand,
-      videoProvider: videoProvider,
-      videoLink: videoLink,
-      shippingRate: shippingRate,
-      galleryImages: galleryImagesUrls,
+      name,
+      shortDescription,
+      description,
+      store,
+      attribute,
+      stockStatus,
+      sku,
+      stockQuantity,
+      price,
+      salePrice,
+      saleStatus,
+      discount,
+      startDate,
+      endDate,
+      categories,
+      freeShipping,
+      thumbnail: thumbnailUrl,
+      images: imageUrls,
     };
 
     const cleanPayload = removeNullOrUndefinedFields(payload);
@@ -170,101 +92,118 @@ const createProductController = async (req, res, next) => {
 
 const updateProductController = async (req, res, next) => {
   try {
-    const prodcutId = req.params.id;
-    let galleryImagesUrls = undefined;
+    const productId = req.params.id;
+
+    const product = await Product.findById(productId).lean();
+    if (!product) {
+      throw new AppError("No Product with this id exist");
+    }
+
+    let imageUrls = undefined;
     let thumbnailUrl = undefined;
     const {
       name,
-      shortDescriptions,
+      shortDescription,
       description,
-      type,
-      unit,
-      weight,
-      quantity,
+      store,
+      attribute,
+      stockStatus,
+      sku,
+      stockQuantity,
       price,
       salePrice,
-      saleStartDate,
-      saleEndDate,
-      discountPrice,
-      discountStartDate,
-      discountEndDate,
-      isFeatured,
-      shippingDays,
-      isCod,
-      isFreeShipping,
-      isSaleEnable,
-      isReturn,
-      isTrending,
-      isApproved,
-      sku,
-      isRandomRelatedProducts,
-      stockStatus,
-      metaTitle,
-      metaDescription,
-      estimatedDeliveryText,
-      returnPolicyText,
-      safeCheckout,
-      secureCheckout,
-      socialShare,
-      encourageOrder,
-      encourageView,
-      slug,
-      status,
-      store,
-      createdBy,
-      taxId,
-      ordersCount,
-      reviewsCount,
-      canReview,
-      ratingCount,
-      orderAmount,
-      reviewRatings,
-      relatedProducts,
-      crossSellProducts,
-      sizeChartImage,
+      saleStatus,
+      discount,
+      startDate,
+      endDate,
       categories,
-      attributes,
-      brand,
-      videoProvider,
-      videoLink,
-      shippingRate,
+      freeShipping,
     } = req.body;
-    const { galleryImages, thumbnail } = req.files;
+    const { images, thumbnail } = req.files;
 
-    if (galleryImages) {
-      galleryImagesUrls = [];
-      const previousGalleryImages = await getGalleryImages(prodcutId);
+    if (images[0]) {
+      imageUrls = [];
+      const previousGalleryImages = product.images;
 
       for (let image of previousGalleryImages) {
-        await deleteImageFromAWS(image.url);
+        await deleteImageFromAWS(getfileNameFromUrl(image));
       }
-      for (let image of galleryImages) {
+      for (let image of images) {
         const url = await uploadImageToAWS(image);
-        const urlObj = {
-          url,
-        };
-        galleryImagesUrls.push(urlObj);
+
+        imageUrls.push(url);
       }
     }
 
-    if (thumbnail) {
-      const previousThumbnail = await getThumbnailByProductId(productId);
+    if (thumbnail[0]) {
+      const previousThumbnail = product.thumbnail;
       if (previousThumbnail) {
-        await deleteImageFromAWS(previousThumbnail.url);
+        await deleteImageFromAWS(getfileNameFromUrl(previousThumbnail));
       }
       thumbnailUrl = await uploadImageToAWS(thumbnail[0]);
     }
+
+    const payload = {
+      name,
+      shortDescription,
+      description,
+      store,
+      attribute,
+      stockStatus,
+      sku,
+      stockQuantity,
+      price,
+      salePrice,
+      saleStatus,
+      discount,
+      startDate,
+      endDate,
+      categories,
+      freeShipping,
+      thumbnail: thumbnailUrl,
+      images: imageUrls,
+    };
+
+    const cleanPayload = removeNullOrUndefinedFields(payload);
+    const updatedProduct = await updateProduct(cleanPayload, productId);
+    sendResponse(res, updatedProduct, "Product Upated successfully");
   } catch (error) {
     next(new AppError(error.message));
   }
 };
 
-const GetAllCurrentVendorProductsController = async (req, res, next) => {
+const deleteProductController = async (req, res, next) => {
   try {
-    const userId = res.locals.user.sub;
-    const products = await getVendorProducts(userId);
+    const productId = req.params.id;
 
-    sendResponse(res, products, "Product created successfully!");
+    const product = await Product.findById(productId).lean();
+    if (!product) {
+      throw new AppError("No Product with this id exist");
+    }
+
+    const previousImages = product.images;
+
+    for (let image of previousImages) {
+      await deleteImageFromAWS(getfileNameFromUrl(image));
+    }
+
+    const previousThumbnail = product.thumbnail;
+    if (previousThumbnail) {
+      await deleteImageFromAWS(getfileNameFromUrl(previousThumbnail));
+    }
+
+    const deletedProduct = await deleteProduct(productId);
+    sendResponse(res, deletedProduct, "Product deleted successfully");
+  } catch (error) {
+    console.log(error);
+    next(new AppError(error.message));
+  }
+};
+
+const getAllProductsController = async (req, res, next) => {
+  try {
+    const products = await getAllProducts();
+    sendResponse(res, products, "All Products fetched succssfully");
   } catch (error) {
     next(new AppError(error.message));
   }
@@ -273,5 +212,6 @@ const GetAllCurrentVendorProductsController = async (req, res, next) => {
 module.exports = {
   createProductController,
   updateProductController,
-  GetAllCurrentVendorProductsController,
+  getAllProductsController,
+  deleteProductController,
 };
