@@ -16,9 +16,16 @@ const productSchema = new mongoose.Schema({
     ref: "Store",
     default: null,
   },
+  saleStartsAt: {
+    type: Date,
+  },
+  saleExpireAt: {
+    type: Date,
+  },
   attribute: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Attribute",
+    default: null,
   },
   stockStatus: {
     type: Boolean,
@@ -29,7 +36,7 @@ const productSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
-  stockQuantity: {
+  quantity: {
     type: Number,
     default: 0,
   },
@@ -41,7 +48,7 @@ const productSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
-  saleStatus: {
+  status: {
     type: Boolean,
     default: false,
   },
@@ -49,21 +56,65 @@ const productSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
-  startDate: {
-    type: Date,
-  },
-  endDate: {
-    type: Date,
-  },
   categories: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Category",
     },
   ],
+
+  subCategories: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Category",
+    },
+  ],
+
   thumbnail: String,
   images: [String],
   freeShipping: {
+    type: Boolean,
+    default: false,
+  },
+  estimatedDeliveryText: {
+    type: String,
+  },
+  returnPolicyText: {
+    type: String,
+  },
+  isReturn: {
+    type: Boolean,
+    default: false,
+  },
+  moreReasonsToShop: {
+    type: Boolean,
+    default: false,
+  },
+  megaDeals: {
+    type: Boolean,
+    default: false,
+  },
+  recommendedForYou: {
+    type: Boolean,
+    default: false,
+  },
+  dealsOnlyOnNoon: {
+    type: Boolean,
+    default: false,
+  },
+  trendingDealsInTvAndAccessories: {
+    type: Boolean,
+    default: false,
+  },
+  clearanceDeals: {
+    type: Boolean,
+    default: false,
+  },
+  bestSelling: {
+    type: Boolean,
+    default: false,
+  },
+  bargainStore: {
     type: Boolean,
     default: false,
   },

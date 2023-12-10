@@ -101,9 +101,24 @@ const deleteBannerController = async (req, res, next) => {
   }
 };
 
+const getBannerByIdController = async (req, res, next) => {
+  try {
+    const bannerId = req.params.id;
+    const banner = await Banner.findById(bannerId).lean();
+    if (!banner) {
+      throw new AppError("No Banner exist with that id");
+    }
+    sendResponse(res, banner, "Banner fetched successfully");
+  } catch (error) {
+    console.log(error);
+    next(new AppError(error.message));
+  }
+};
+
 module.exports = {
   createBannerController,
   getAllBannersController,
   updateBannerController,
   deleteBannerController,
+  getBannerByIdController,
 };

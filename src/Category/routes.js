@@ -7,6 +7,8 @@ const {
   updateCategoryController,
   deleteCategoryController,
   getAllCategoriesController,
+  getCategoryByIdController,
+  subCategoriesController,
 } = require("./Controller/index");
 
 const storage = require("../utils/FileStorage.config");
@@ -43,5 +45,9 @@ router.put(
 );
 
 router.delete("/deleteCategory/:id", deleteCategoryController);
+
+router.get("/getCategory/:id", getCategoryByIdController);
+
+router.get("/subcategories", subCategoriesController);
 
 module.exports = router;

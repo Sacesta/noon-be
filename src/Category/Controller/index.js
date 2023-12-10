@@ -104,9 +104,41 @@ const deleteCategoryController = async (req, res, next) => {
   }
 };
 
+const getCategoryByIdController = async (req, res, next) => {
+  try {
+    const categoryId = req.params.id;
+    const category = await Category.findById(categoryId).lean();
+    if (!category) {
+      throw new AppError("No Category exist with that id");
+    }
+    sendResponse(res, category, "Category fetched successfully");
+  } catch (error) {
+    console.log(error);
+    next(new AppError(error.message));
+  }
+};
+
+const subCategoriesController = async (req, res, next) => {
+  try {
+    const { categoryId } = req.query;
+    if (!categoryId) {
+      throw new AppError("CategoryId required");
+    }
+    const subCategories = await Category.find({
+      parentCategory: categoryId,
+    }).lean();
+
+    sendResponse(res, subCategories, "All subcategories fetched");
+  } catch (error) {
+    next(new AppError(error.message));
+  }
+};
+
 module.exports = {
   CreateCategoryController,
   getAllCategoriesController,
   updateCategoryController,
   deleteCategoryController,
+  getCategoryByIdController,
+  subCategoriesController,
 };

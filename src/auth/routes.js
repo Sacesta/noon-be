@@ -6,6 +6,7 @@ const {
   CustomerRegistrationController,
   VendorRegistrationController,
   GetAllUsersController,
+  getUserByIdController,
 } = require("./controller/index");
 const storage = require("../utils/FileStorage.config");
 const { deserializeUser } = require("./middleware/deserializeUser");
@@ -69,6 +70,8 @@ router.use(deserializeUser, requireUser);
 router.use(checkAdmin);
 
 router.get("/users", GetAllUsersController);
+
+router.get("/user/:id", getUserByIdController);
 
 // Protected routes
 

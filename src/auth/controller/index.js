@@ -3,6 +3,7 @@ const AppError = require("../../utils/appError");
 const { excludedFields } = require("../../utils/excludedFields");
 const { removeNullOrUndefinedFields } = require("../../utils/misc");
 const { sendResponse } = require("../../utils/sendResponse");
+const { User } = require("../Models/User.model");
 const {
   registerAdmin,
   signToken,
@@ -125,7 +126,21 @@ const LoginController = async (req, res, next) => {
     });
   } catch (error) {
     console.log(error);
-    next(error);
+    next(new AppError(error.message));
+  }
+};
+
+const getUserByIdController = async (req, res, next) => {
+  try {
+    const userId = req.params.id;
+    const user = await User.findById(userId).select("-password").lean();
+    if (!user) {
+      throw new AppError("User with that id does not exist");
+    }
+    sendResponse(res, user, "User fetched successfully");
+  } catch (error) {
+    console.log(error);
+    next(new AppError(error.message));
   }
 };
 
@@ -135,4 +150,5 @@ module.exports = {
   CustomerRegistrationController,
   VendorRegistrationController,
   GetAllUsersController,
+  getUserByIdController,
 };

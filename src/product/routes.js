@@ -7,6 +7,7 @@ const {
   getAllProductsController,
   deleteProductController,
   updateProductController,
+  getProductByIdController,
 } = require("./Controller");
 const { deserializeUser } = require("../auth/middleware/deserializeUser");
 const { requireUser } = require("../auth/middleware/requireUser");
@@ -75,5 +76,7 @@ router.put(
 router.get("/getAllProducts", getAllProductsController);
 
 router.delete("/deleteProduct/:id", deleteProductController);
+
+router.get("/:id", getProductByIdController);
 
 module.exports = router;

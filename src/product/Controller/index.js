@@ -17,24 +17,35 @@ const _ = require("lodash");
 
 const createProductController = async (req, res, next) => {
   try {
-    const currentVendor = res.locals.user.sub;
     const {
       name,
       shortDescription,
       description,
       store,
+      saleStartsAt,
+      saleExpireAt,
       attribute,
       stockStatus,
       sku,
-      stockQuantity,
+      quantity,
       price,
       salePrice,
-      saleStatus,
+      status,
       discount,
-      startDate,
-      endDate,
       categories,
+      subCategories,
       freeShipping,
+      estimatedDeliveryText,
+      returnPolicyText,
+      isReturn,
+      moreReasonsToShop,
+      megaDeals,
+      recommendedForYou,
+      dealsOnlyOnNoon,
+      trendingDealsInTvAndAccessories,
+      clearanceDeals,
+      bestSelling,
+      bargainStore,
     } = req.body;
     const imageUrls = [];
 
@@ -57,18 +68,30 @@ const createProductController = async (req, res, next) => {
       shortDescription,
       description,
       store,
+      saleStartsAt,
+      saleExpireAt,
       attribute,
       stockStatus,
       sku,
-      stockQuantity,
+      quantity,
       price,
       salePrice,
-      saleStatus,
+      status,
       discount,
-      startDate,
-      endDate,
       categories,
+      subCategories,
       freeShipping,
+      estimatedDeliveryText,
+      returnPolicyText,
+      isReturn,
+      moreReasonsToShop,
+      megaDeals,
+      recommendedForYou,
+      dealsOnlyOnNoon,
+      trendingDealsInTvAndAccessories,
+      clearanceDeals,
+      bestSelling,
+      bargainStore,
       thumbnail: thumbnailUrl,
       images: imageUrls,
     };
@@ -106,18 +129,30 @@ const updateProductController = async (req, res, next) => {
       shortDescription,
       description,
       store,
+      saleStartsAt,
+      saleExpireAt,
       attribute,
       stockStatus,
       sku,
-      stockQuantity,
+      quantity,
       price,
       salePrice,
-      saleStatus,
+      status,
       discount,
-      startDate,
-      endDate,
       categories,
+      subCategories,
       freeShipping,
+      estimatedDeliveryText,
+      returnPolicyText,
+      isReturn,
+      moreReasonsToShop,
+      megaDeals,
+      recommendedForYou,
+      dealsOnlyOnNoon,
+      trendingDealsInTvAndAccessories,
+      clearanceDeals,
+      bestSelling,
+      bargainStore,
     } = req.body;
     const { images, thumbnail } = req.files;
 
@@ -148,18 +183,30 @@ const updateProductController = async (req, res, next) => {
       shortDescription,
       description,
       store,
+      saleStartsAt,
+      saleExpireAt,
       attribute,
       stockStatus,
       sku,
-      stockQuantity,
+      quantity,
       price,
       salePrice,
-      saleStatus,
+      status,
       discount,
-      startDate,
-      endDate,
       categories,
+      subCategories,
       freeShipping,
+      estimatedDeliveryText,
+      returnPolicyText,
+      isReturn,
+      moreReasonsToShop,
+      megaDeals,
+      recommendedForYou,
+      dealsOnlyOnNoon,
+      trendingDealsInTvAndAccessories,
+      clearanceDeals,
+      bestSelling,
+      bargainStore,
       thumbnail: thumbnailUrl,
       images: imageUrls,
     };
@@ -209,9 +256,24 @@ const getAllProductsController = async (req, res, next) => {
   }
 };
 
+const getProductByIdController = async (req, res, next) => {
+  try {
+    const prodId = req.params.id;
+    const product = await Product.findById(prodId).lean();
+    if (!product) {
+      throw new AppError("No Product exist with that id");
+    }
+    sendResponse(res, product, "Product fetched successfully");
+  } catch (error) {
+    console.log(error);
+    next(new AppError(error.message));
+  }
+};
+
 module.exports = {
   createProductController,
   updateProductController,
   getAllProductsController,
   deleteProductController,
+  getProductByIdController,
 };

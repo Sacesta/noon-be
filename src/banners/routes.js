@@ -9,6 +9,7 @@ const {
   getAllBannersController,
   updateBannerController,
   deleteBannerController,
+  getBannerByIdController,
 } = require("./controllers");
 const AppError = require("../utils/appError");
 const router = express.Router();
@@ -44,4 +45,5 @@ router.delete(
   deleteBannerController
 );
 
+router.get("/banner/:id", getBannerByIdController);
 module.exports = router;

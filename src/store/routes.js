@@ -6,6 +6,7 @@ const {
   getAllStoresController,
   deleteStoreController,
   updateStoreController,
+  getStoreByIdController,
 } = require("./controller");
 const { checkAdmin } = require("../auth/middleware/ValidateRoles");
 const { requireUser } = require("../auth/middleware/requireUser");
@@ -64,5 +65,7 @@ router.put(
 );
 
 router.delete("/deleteStore/:id", deleteStoreController);
+
+router.get("/store/:id", getStoreByIdController);
 
 module.exports = router;

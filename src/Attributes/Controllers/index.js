@@ -67,9 +67,24 @@ const deleteAttributeController = async (req, res, next) => {
   }
 };
 
+const getAttributeByIdController = async (req, res, next) => {
+  try {
+    const attrId = req.params.id;
+    const attribute = await Attribute.findById(attrId).lean();
+    if (!attribute) {
+      throw new AppError("No Attribute exist with that id");
+    }
+    sendResponse(res, attribute, "Attribute fetched successfully");
+  } catch (error) {
+    console.log(error);
+    next(new AppError(error.message));
+  }
+};
+
 module.exports = {
   createAttributeController,
   GetAttributesController,
   updateAttributeController,
   deleteAttributeController,
+  getAttributeByIdController,
 };

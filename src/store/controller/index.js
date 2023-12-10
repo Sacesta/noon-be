@@ -220,9 +220,23 @@ const deleteStoreController = async (req, res, next) => {
   }
 };
 
+const getStoreByIdController = async (req, res, next) => {
+  try {
+    const storeId = req.params.id;
+    const store = await Store.findById(storeId).select("-password").lean();
+    if (!store) {
+      throw new AppError("Store with that id does not exist");
+    }
+    sendResponse(res, store, "Store fetched successfully");
+  } catch (error) {
+    next(new AppError(error.message));
+  }
+};
+
 module.exports = {
   getAllStoresController,
   createStoreController,
   updateStoreController,
   deleteStoreController,
+  getStoreByIdController,
 };
