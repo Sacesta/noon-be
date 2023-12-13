@@ -37,9 +37,32 @@ const deleteCategory = async (categoryId) => {
   return deleteCategory;
 };
 
+const buildCategoryTree = async (categories) => {
+  const categoryLookup = {};
+  categories.forEach((cat) => {
+    categoryLookup[cat._id] = cat;
+  });
+
+  categories.forEach((cat) => {
+    const parent = categoryLookup[cat.parentCategory?._id];
+    if (parent) {
+      parent.subCategories = parent.subCategories || [];
+      parent.subCategories.push(cat);
+    }
+  });
+
+  let tree = categories.filter((cat) => {
+    let parent = categoryLookup[cat.parentCategory?._id];
+    if (!parent) return cat;
+  });
+
+  return tree;
+};
+
 module.exports = {
   createCategory,
   getAllCategories,
   updateCategory,
   deleteCategory,
+  buildCategoryTree,
 };

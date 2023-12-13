@@ -30,11 +30,30 @@ const storeSchema = new Schema(
       type: String,
       required: true,
     },
-    name: String,
-    phone: String,
-    storeLogo: String,
-    storeName: String,
-    storeDescrption: String,
+    name: {
+      type: String,
+      default: "",
+    },
+    phone: {
+      type: String,
+      default: "",
+    },
+    countryCode: {
+      type: String,
+      default: "",
+    },
+    storeLogo: {
+      type: String,
+      default: "",
+    },
+    storeName: {
+      type: String,
+      default: "",
+    },
+    storeDescrption: {
+      type: String,
+      default: "",
+    },
     addressDetails: addressSchema,
     documentation: String,
     paymentDetails: paymentSchema,

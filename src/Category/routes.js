@@ -9,6 +9,7 @@ const {
   getAllCategoriesController,
   getCategoryByIdController,
   subCategoriesController,
+  getAllCategoriesTreeController,
 } = require("./Controller/index");
 
 const storage = require("../utils/FileStorage.config");
@@ -49,5 +50,7 @@ router.delete("/deleteCategory/:id", deleteCategoryController);
 router.get("/getCategory/:id", getCategoryByIdController);
 
 router.get("/subcategories", subCategoriesController);
+
+router.get("/categoryTree", getAllCategoriesTreeController);
 
 module.exports = router;

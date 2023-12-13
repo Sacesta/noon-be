@@ -11,6 +11,7 @@ const {
   updateCategory,
   deleteCategory,
   getAllCategories,
+  buildCategoryTree,
 } = require("../Services");
 
 const CreateCategoryController = async (req, res, next) => {
@@ -134,6 +135,16 @@ const subCategoriesController = async (req, res, next) => {
   }
 };
 
+const getAllCategoriesTreeController = async (req, res, next) => {
+  try {
+    const categories = await Category.find().populate("parentCategory").lean();
+    const tree = await buildCategoryTree(categories);
+    sendResponse(res, tree, "Category tree fetched");
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 module.exports = {
   CreateCategoryController,
   getAllCategoriesController,
@@ -141,4 +152,5 @@ module.exports = {
   deleteCategoryController,
   getCategoryByIdController,
   subCategoriesController,
+  getAllCategoriesTreeController,
 };

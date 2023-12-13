@@ -43,6 +43,7 @@ const createStoreController = async (req, res, next) => {
       bankName,
       holderName,
       ifsc,
+      countryCode,
     } = req.body;
 
     if (password !== confirmPassword)
@@ -62,6 +63,7 @@ const createStoreController = async (req, res, next) => {
       phone,
       storeLogo,
       storeName,
+      countryCode,
       storeDescription,
       addressDetails: {
         country,
@@ -126,6 +128,7 @@ const updateStoreController = async (req, res, next) => {
     const {
       email,
       password,
+      countryCode,
       confirmPassword,
       storeName,
       storeDescription,
@@ -152,6 +155,7 @@ const updateStoreController = async (req, res, next) => {
       phone,
       storeLogo,
       storeName,
+      countryCode,
       storeDescription,
       addressDetails: {
         country,
