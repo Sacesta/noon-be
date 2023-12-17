@@ -50,7 +50,7 @@ const storeSchema = new Schema(
       type: String,
       default: "",
     },
-    storeDescrption: {
+    storeDescription: {
       type: String,
       default: "",
     },
