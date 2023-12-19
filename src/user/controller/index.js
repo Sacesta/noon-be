@@ -15,7 +15,15 @@ const getUsersController = async (req, res, next) => {
 
 const createUserController = async (req, res, next) => {
   try {
-    const { name, email, password, confirmPassword, phone, role_id } = req.body;
+    const {
+      name,
+      email,
+      password,
+      confirmPassword,
+      phone,
+      role_id,
+      country_code,
+    } = req.body;
     const userPayload = {
       name,
       email,
@@ -23,6 +31,7 @@ const createUserController = async (req, res, next) => {
       password,
       confirmPassword,
       role_id,
+      country_code,
     };
     if (password !== confirmPassword)
       throw new AppError("Password does not match with confirm password");
@@ -37,4 +46,7 @@ const createUserController = async (req, res, next) => {
   }
 };
 
-module.exports = { createUserController, getUsersController };
+module.exports = {
+  createUserController,
+  getUsersController,
+};

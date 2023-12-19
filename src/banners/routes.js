@@ -39,7 +39,7 @@ router.put(
 );
 
 router.delete(
-  "/updateBanner/:id",
+  "/deleteBanner/:id",
   upload.single("image"),
   // validate(productSchema),
   deleteBannerController

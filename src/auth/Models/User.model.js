@@ -47,6 +47,7 @@ const customerSchema = new Schema({
     trim: true,
   },
   phone: String,
+  countryCode: String,
   status: {
     type: Boolean,
     default: false,

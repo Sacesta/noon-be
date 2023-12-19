@@ -27,6 +27,10 @@ const productSchema = new mongoose.Schema({
     ref: "Attribute",
     default: null,
   },
+  attributeValues: {
+    type: [String],
+    default: [],
+  },
   stockStatus: {
     type: Boolean,
     default: false,
@@ -75,6 +79,9 @@ const productSchema = new mongoose.Schema({
   freeShipping: {
     type: Boolean,
     default: false,
+  },
+  tax: {
+    type: String,
   },
   estimatedDeliveryText: {
     type: String,

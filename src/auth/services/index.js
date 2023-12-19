@@ -38,6 +38,20 @@ const getUsers = async () => {
   return users;
 };
 
+const updateUser = async (userPayload, userId) => {
+  const user = await Customer.findById(userId);
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  const updatedUser = await Customer.findByIdAndUpdate(userId, userPayload, {
+    new: true,
+  });
+
+  return updatedUser;
+};
+
 module.exports = {
   registerAdmin,
   registerCustomer,
@@ -45,4 +59,5 @@ module.exports = {
   findUser,
   signToken,
   getUsers,
+  updateUser,
 };

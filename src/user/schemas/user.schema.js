@@ -16,5 +16,6 @@ module.exports.userSchema = object({
       message: "password must be at least 8 characters long",
     }),
     role_id: string({ required_error: "role_id is required" }),
+    country_code: string({ required_error: "country_code is required" }),
   }),
 });

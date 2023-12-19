@@ -11,6 +11,7 @@ const {
   registerCustomer,
   findUser,
   getUsers,
+  updateUser,
 } = require("../services");
 const _ = require("lodash");
 
@@ -87,13 +88,14 @@ const VendorRegistrationController = async (req, res, next) => {
 
 const CustomerRegistrationController = async (req, res, next) => {
   try {
-    const { email, password, name, phone, status } = req.body;
+    const { email, password, name, phone, status, countryCode } = req.body;
     const payload = {
       email,
       password,
       phone,
       name,
       role: "customer",
+      countryCode,
       status,
     };
     const cleanPayload = removeNullOrUndefinedFields(payload);
@@ -144,6 +146,28 @@ const getUserByIdController = async (req, res, next) => {
   }
 };
 
+const updateUserByIdController = async (req, res, next) => {
+  try {
+    const userId = req.params.id;
+    const { name, email, phone, role_id, countryCode } = req.body;
+    const userPayload = {
+      name,
+      email,
+      phone,
+      role_id,
+      countryCode,
+    };
+    const user = await updateUser(userPayload, userId);
+    sendResponse(
+      res,
+      _.omit(user.toObject(), excludedFields),
+      "User updated successfully"
+    );
+  } catch (error) {
+    next(new AppError(error.message));
+  }
+};
+
 module.exports = {
   LoginController,
   AdminRegisterationController,
@@ -151,4 +175,5 @@ module.exports = {
   VendorRegistrationController,
   GetAllUsersController,
   getUserByIdController,
+  updateUserByIdController,
 };

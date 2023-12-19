@@ -7,6 +7,7 @@ const {
   VendorRegistrationController,
   GetAllUsersController,
   getUserByIdController,
+  updateUserByIdController,
 } = require("./controller/index");
 const storage = require("../utils/FileStorage.config");
 const { deserializeUser } = require("./middleware/deserializeUser");
@@ -41,6 +42,8 @@ router.post(
   CustomerRegistrationController
 );
 
+router.put("/updateUser/:id", updateUserByIdController);
+
 // // Vendor
 // router.post(
 //   "/registerVendor",
@@ -70,6 +73,8 @@ router.use(deserializeUser, requireUser);
 router.use(checkAdmin);
 
 router.get("/users", GetAllUsersController);
+
+router.get("/user/:id", getUserByIdController);
 
 router.get("/user/:id", getUserByIdController);
 
