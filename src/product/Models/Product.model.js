@@ -16,6 +16,10 @@ const productSchema = new mongoose.Schema({
     ref: "Store",
     default: null,
   },
+  saleStatus: {
+    type: Boolean,
+    default: false,
+  },
   saleStartsAt: {
     type: Date,
   },
@@ -32,8 +36,7 @@ const productSchema = new mongoose.Schema({
     default: [],
   },
   stockStatus: {
-    type: Boolean,
-    default: false,
+    type: String,
   },
   sku: {
     type: String,
@@ -82,6 +85,7 @@ const productSchema = new mongoose.Schema({
   },
   tax: {
     type: String,
+    default: "18",
   },
   estimatedDeliveryText: {
     type: String,

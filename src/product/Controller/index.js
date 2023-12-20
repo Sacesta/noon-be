@@ -29,7 +29,10 @@ const createProductController = async (req, res, next) => {
       sku,
       quantity,
       price,
+      tax,
+      attributeValues,
       salePrice,
+      saleStatus,
       status,
       discount,
       categories,
@@ -63,6 +66,11 @@ const createProductController = async (req, res, next) => {
       thumbnailUrl = await uploadImageToAWS(thumbnail[0]);
     }
 
+    let attributeValuesParsed;
+    if (attributeValues !== undefined && attributeValues !== null) {
+      attributeValuesParsed = JSON.parse(attributeValues);
+    }
+
     const payload = {
       name,
       shortDescription,
@@ -75,7 +83,10 @@ const createProductController = async (req, res, next) => {
       sku,
       quantity,
       price,
+      tax,
+      attributeValues: attributeValuesParsed,
       salePrice,
+      saleStatus,
       status,
       discount,
       categories,
